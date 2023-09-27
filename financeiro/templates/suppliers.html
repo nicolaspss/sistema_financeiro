@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block navbar %}
+{% include 'navbar.html' %}
+{% endblock %}
+
+{% block content %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb my-4">
+    <li class="breadcrumb-item"><a class="breadcrumb-link" href="{% url 'home' %}">Início</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Contas</li>
+  </ol>
+</nav>
+{% endblock %}
+
+<h2 class="mb-5"> Fornecedores </h2>
+
+<div class="card mx-auto">
+  <div class="card-header px-2">
+    <div class="col d-flex w-100 justify-content-between m-0">
+      <div class="row">
+        <div class="col">
+          <!-- Button trigger modal -->
+          <button type="button" class="btn btn-primary btn-sm px-2" data-bs-toggle="modal" data-bs-target="#formModal">
+            <span class="loader me-1"></span>
+            <i class="fa-solid fa-plus icon me-2" style="display: none;"></i>Novo
+          </button>
+
+          <!-- Modal -->
+          <form method="post" action="{% url 'new_supplier' %}">
+            {% csrf_token %}
+            <div class="modal fade" aria-live="polite" id="formModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+              aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Novo</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <input type="text" class="form-control mb-3" name="name" placeholder="Nome do Fornecedor: "
+                      required>
+                    <div class="form-floating">
+                      <select class="form-select mb-3" id="type" name="type" required>
+                        <option value="Física">Física</option>
+                        <option value="Jurídica">Jurídica</option>
+                      </select>
+                      <label for="type">Selecione o Tipo de Pessoa:</label>
+                    </div>
+                    <div class="row mb-3">
+                      <div class="col-md-6">
+                        <input type="number" class="form-control" name="document" minlength="11"
+                          placeholder="Documento (CPF ou CNPJ)" required>
+                      </div>
+                      <div class="col-md-6">
+                        <input type="number" class="form-control" id="telephone" name="telephone" minlength="10"
+                          placeholder="(00) 00000-0000">
+                      </div>
+                    </div>
+                    <input type="email" class="form-control" name="email" placeholder="Endereço de E-mail">
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary"><i
+                        class="fa-solid fa-floppy-disk me-2"></i>Salvar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <p class="m-0 align-self-center">
+        {% block search_alert %}{% endblock %}
+      </p>
+      <div class="p-0 d-flex row">
+        <form method="POST" action="{% url 'search_bar' %}">
+          {% csrf_token %}
+          <div class="input-group-sm d-flex col">
+            <input type="search" class="form-control me-2" placeholder="Filtrar..." name="searched">
+            <button class="btn btn-sm btn-primary m-0" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="card-body p-0 overflow-auto">
+    <table class="table table-hover table-borderless table-responsive table-striped table-sm mb-0 sortable">
+      <thead class="bg-light sticky-top clickable">
+        <tr>
+          <th scope="col px-1">#</th>
+          <th scope="col">Nome Completo</th>
+          <th scope="col">Documento</th>
+          <th scope="col">Tipo de Pessoa</th>
+          <th scope="col">Telefone</th>
+          <th scope="col">Email</th>
+          <th scope="col">Ação</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- Nessa parte, além de todos os objetos serem renderizados, há também
+                a possibilidade de renderizar os resultados da pesquisa dentro do bloco
+                "table" quando a url "filtrar" for chamada -->
+
+        {% for supplier in suppliers %}
+        <tr class="align-middle">
+          <td class="px-2">{{ supplier.id }}</td>
+          <td>{{ supplier.name }}</td>
+          <td>{{ supplier.document }}</td>
+          <td>{{ supplier.type }}</td>
+          <td>{{ supplier.telephone }}</td>
+          <td>{{ supplier.email }}</td>
+          <td class="h-100">
+
+            <!-- Essa célula da tabela contém os botões e os modais responsáveis por modificar as informações
+                contidas em cada linha. Modificando a target e a id do modal para o id do objeto cria um link
+                entre eles, fazendo com que um mostre as informações do objeto em questão, substituindo o
+                argumento "instance" do django-forms. -->
+
+            <div class="d-flex">
+              <button type="button" class="btn btn-sm btn-secondary m-1" data-bs-toggle="modal"
+                data-bs-target="#{{account.id}}" style="position: static;">
+                <span class="loader"></span>
+                <i class="fa-solid fa-arrows-rotate icon" style="display: none;"></i>
+              </button>
+              <form method="post" action="">
+                {% csrf_token %}
+                <div class="modal fade" id="{{account.id}}" tabindex="-1" aria-labelledby="exampleModalLabel"
+                  aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Novo</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="row mb-3">
+                          <div class="col-md-6">
+                            <input type="text" class="form-control" name="name" placeholder="Nome da Instituição"
+                              value="{{ account.name }}">
+                          </div>
+                          <div class="col-md-6">
+                            <input type="text" class="form-control" name="account_type" placeholder="Tipo da Conta"
+                              value="{{ account.account_type }}">
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                          <div class="col-md-6">
+                            <input type="text" class="form-control" name="account_number" placeholder="Número da Conta"
+                              value="{{ account.account_number }}">
+                          </div>
+                          <div class="col-md-6">
+                            <input type="number" class="form-control" name="agency" placeholder="Agência"
+                              value="{{ account.agency }}">
+                          </div>
+                        </div>
+                        <input type="text" class="form-control mb-3" name="titular_name" placeholder="Nome do Titular"
+                          value="{{ account.titular_name }}">
+                        <input type="text" class="form-control mb-3" name="titular_document"
+                          placeholder="Documento do Titular" value="{{ account.titular_document }}">
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary"><i
+                            class="fa-solid fa-floppy-disk me-2"></i>Salvar</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+              <a href="" class="btn btn-sm btn-danger m-1"
+                style="height: 10%;position: static;">
+                <span class="loader"></span>
+                <i class="fa-solid fa-trash icon" style="display:none;"></i>
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+<div class="h-100 bg-dark sticky-top" id="sidebar-wrapper">
+    <div class="text-white h5 p-3 mb-0 px-3">
+        <h5 class="mb-0 mx-3">Financeiro</h5> 
+    </div>
+    <div class="list-group text-white list-group-flush p-3">
+        <!--<a class="side-link text-white p-3 disabled" href="{% url 'home' %}">Início</a>-->
+        <a class="side-link text-white p-3" href="{% url 'accounts' %}">Contas</a>
+        <a class="side-link text-white p-3" href="{% url 'account_plans' %}">Plano de Contas</a>
+        <a class="side-link text-white p-3" href="{% url 'suppliers' %}">Clientes e Fornecedores</a>
+        <a class="side-link text-white p-3" href="{% url 'transfers' %}">Transferências</a>
+        <a class="side-link text-white p-3" href="#">Relatórios</a>
+        <a class="side-link text-white p-3 disabled" href="{% url 'transfers' %}">Configurações</a>
+    </div>
+</div>

@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block navbar %}
+{% include 'navbar.html' %}
+{% endblock %}
+
+{% block content %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb my-4">
+    <li class="breadcrumb-item"><a class="breadcrumb-link" href="{% url 'home' %}">Início</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Plano de Contas</li>
+  </ol>
+</nav>
+{% endblock %}
+
+<h2 class="mb-5"> Plano de Contas </h2>
+
+<div class="card">
+  <div class="card-header px-2">
+    <div class="col d-flex w-100 justify-content-between m-0">
+      <div class="row">
+        <div class="col">
+          <!-- Button trigger modal -->
+          <div class="dropdown me-2">
+            <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <span class="loader me-1"></span>
+              <i class="fa-solid fa-plus icon me-2" style="display: none;"></i>Novo
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+              <li><a class="dropdown-item" href="#formModalCategory" data-bs-toggle="modal">Nova Categoria</a></li>
+              <li><a class="dropdown-item" href="#formModalAccount" data-bs-toggle="modal">Nova Conta</a></li>
+            </ul>
+          </div>
+    
+          <!-- Formulário da nova categoria -->
+    
+          <form method="post" action="{% url 'add_new_category' %}">
+            {% csrf_token %}
+            <div class="modal fade" id="formModalCategory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="formModalCategory">Nova Categoria</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <input class="form-control mb-3" type="text" name="name" placeholder="Nome da Categoria:"
+                      aria-label="default input example">
+                    <input class="form-control mb-3" type="number" name="category_id" placeholder="Código"
+                      aria-label="default input example" aria-disabled="true" disabled>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+    
+          <!-- Formulário da nova conta contábil -->
+    
+          <form method="post" action="{% url 'add_new_account' %}">
+            {% csrf_token %}
+            <div class="modal fade" id="formModalAccount" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Novo</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <input type="text" class="form-control mb-3" name="account_name" placeholder="Nome da Conta:" required>
+                    <input type="number" class="form-control mb-3" name="amount" placeholder="Quantia:">
+                    <select class="form-select" name="account_category" aria-label="Selecione a Categoria:" required>
+                      <option selected>Selecione a Categoria</option>
+                      {% for category in categories %}
+                        <option value="{{category.id}}">{{category.name}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary"><i
+                        class="fa-solid fa-floppy-disk me-2"></i>Salvar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    
+      <div class="col">
+        <button type="button" class="btn btn-danger btn-sm px-2" data-bs-toggle="modal" data-bs-target="#formModal">
+          <span class="loader me-1"></span>
+          <i class="fa-solid fa-trash icon me-2" style="display: none;"></i>Excluir
+        </button>
+    
+        <!-- Modal -->
+    
+        <form method="post" action ="{% url 'delete_category' %}">
+          {% csrf_token %}
+          <div class="modal fade" aria-live="polite" id="formModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h1 class="modal-title fs-5" id="exampleModalLabel">Excluir Categoria</h1>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <select class="form-select" name="category" aria-label="Selecione a Categoria:" required>
+                          <option selected>Selecione a Categoria</option>
+                          {% for category in categories %}
+                              <option value="{{category.id}}" selected>{{category.name}}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                          <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash me-2"></i>Excluir</button>
+                      </div>
+                  </div>
+              </div>
+          </div>   
+        </form>
+      </div>
+    
+      <div class="col-md-auto p-0">
+        <form class="d-flex float-start" method="POST" action="{% url 'search_bar' %}">
+          {% csrf_token %}
+          <div class="form-group input-group-sm">
+            <input type="search" class="form-control" placeholder="Filtrar..." name="searched" aria-disabled="true" disabled>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="card-body p-0">
+    {% include 'account_plan/category_list.html' %}
+  </div>
+</div>
+
+{% endblock %}
