@@ -11,8 +11,6 @@
 </nav>
 {% endblock %}
 
-
-
 <h2 class="mb-5"> Transferências </h2>
 
 <div class="card">
@@ -103,34 +101,52 @@
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Novo Pagamento</h1>
+                    <h1 class="modal-title fs-5" id="formModalReceipt">Novo Pagamento</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <select class="form-select mb-3" name="bank_account" aria-label="Selecione a Conta Caixa:"
+                    <div class="form-floating">
+                    <select class="form-select mb-3" id="receipt_bank_account" name="bank_account" aria-label="Selecione a Conta Caixa:"
                       placeholder="Selecione a Conta Caixa" required>
                       {% for account in bank_accounts %}
                       <option value="{{account.id}}">{{account.name}}</option>
                       {% endfor %}
                     </select>
-                    <select class="form-select mb-3" name="supplier" aria-label="Selecione o Cliente ou Fornecedor:"
+                    <label for="receipt_bank_account">Selecione a Conta Caixa:</label>
+                    </div>
+                    <div class="form-floating">
+                    <select class="form-select mb-3" id="receipt_supplier" name="supplier" aria-label="Selecione o Cliente ou Fornecedor:"
                       placeholder="Selecione o Cliente ou Fornecedor:" required>
                       {% for supplier in suppliers %}
                       <option value="{{supplier.id}}">{{supplier.name}}</option>
                       {% endfor %}
                     </select>
-                    <select class="form-select mb-3" name="account" aria-label="Selecione o Cliente ou Fornecedor:"
-                      placeholder="Selecione o Cliente ou Fornecedor:" required>
+                    <label for="receipt_supplier">Selecione o Cliente e Fornecedor: </label>
+                    </div>
+                    <div class="form-floating">
+                    <select class="form-select mb-3" id="receipt_account" name="account" aria-label="Selecione a Conta Contábil"
+                      placeholder="Selecione o Cliente ou Fornecedor:" required>  
                       {% for account in accounts %}
                       <option value="{{account.id}}">{{account.name}}</option>
                       {% endfor %}
                     </select>
-                    <input type="number" class="form-control mb-3" name="value" placeholder="Quantia:">
+                    <label for="receipt_account">Selecione a Conta Contábil:</label>
+                    </div>
+                    <div class="row mb-3">
+                      <div class="col-md-6">
+                        <label class="ms-1 mb-1" for="receipt_start_date"> Data de Início </label>
+                        <input type="date" id="receipt_start_date" class="form-control col-md-4" name="start_date" required>
+                      </div>
+                      <div class="col-md-6">
+                        <label class="ms-1 mb-1" for="payment_start_date"> Data de Vencimento </label>
+                        <input type="date" id="payment_start_date" class="form-control col-md-4" name="end_date" required>
+                      </div>
+                    </div>
+                    <input type="number" class="form-control mb-3" name="value" placeholder="Valor:" required>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary"><i
-                        class="fa-solid fa-floppy-disk me-2"></i>Salvar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
                   </div>
                 </div>
               </div>
@@ -153,8 +169,8 @@
     </div>
   </div>
   <div class="card-body p-0 overflow-auto">
-    <table class="table table-hover table-borderless table-striped table-sm mb-0 sortable">
-      <thead class="bg-light clickable">
+    <table class="table table-hover table-borderless table-sm mb-0 sortable">
+      <thead class="clickable">
         <tr>
           <th scope="col px-1">#</th>
           <th scope="col">Cliente e Fornecedor</th>
@@ -179,6 +195,20 @@
         {% endblock %}
 
       </tbody>
+      <tfoot class="border-top">
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td><strong>Total: </strong></td>
+          <td> 
+            <strong>R$ {{transfer_sum.value__sum}}</strong>
+          </td>
+        </tr>
+      </tfoot>
     </table>
     
   </div>

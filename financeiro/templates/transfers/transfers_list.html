@@ -1,5 +1,9 @@
 {% for transfer in transfers %}
-<tr class="align-middle">
+{% if transfer.transfer_type == "Recebimento" %}
+<tr class="align-middle table-success bg-opacity">
+{% elif transfer.transfer_type == "Pagamento" %}
+<tr class="align-middle table-danger bg-opacity">
+{% endif %}
   <td class="px-2">{{ transfer.id }}</td>
   <td>{{ transfer.supplier }}</td>
   <td>{{ transfer.transfer_type }}</td>

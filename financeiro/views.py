@@ -129,8 +129,6 @@ def delete_category(request):
         messages.error(request, "Você deve estar logado para visualizar esta página.")
         return redirect('home')
 
-
-
 def add_new_account(request):
     if request.user.is_authenticated:
         if request.method == "POST":
@@ -177,15 +175,18 @@ def new_supplier(request):
     
 def transfers(request):
     if request.user.is_authenticated:
-        transfers = Transfer.objects.all()
+        transfers = Transfer.objects.all().order_by('-id')
         accounts = Account.objects.all()
         bank_accounts = BankAccounts.objects.all()
         suppliers = Supplier.objects.all()
+        sum_transfer=Transfer.objects.aggregate(Sum('value'))
+        print(sum_transfer) 
         return render(request, 'transfers/transfers.html', {
             'transfers': transfers,
             'accounts': accounts,
             'bank_accounts': bank_accounts,
             'suppliers': suppliers,
+            'transfer_sum': sum_transfer,
         })
 
 def filter_by_date(request):
@@ -228,8 +229,8 @@ def add_new_receipt(request):
 def add_new_payment(request):
     if request.user.is_authenticated:
         if request.method == "POST":
-            value = request.POST.get('value')
-            print(value)
+            value = float(request.POST.get('value'))
+            negative = -abs(value)
             supplier_id = request.POST.get('supplier')
             supplier = Supplier.objects.get(id=supplier_id)
             account_id = request.POST.get('account')
@@ -237,7 +238,15 @@ def add_new_payment(request):
             bank_id = request.POST.get('bank_account')
             bank = BankAccounts.objects.get(id=bank_id)
             transfer_type = "Pagamento"
-            transfer = Transfer(value=value, supplier=supplier, account=account, bank_account=bank, transfer_type=transfer_type)
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            transfer = Transfer(value=negative, 
+                                supplier=supplier, 
+                                account=account, 
+                                bank_account=bank,
+                                start_date=start_date, 
+                                end_date=end_date,  
+                                transfer_type=transfer_type)
             messages.success(request, "Cadastro realizado com sucesso!")
             transfer.save()
             return redirect('transfers')
@@ -254,6 +263,3 @@ def delete_transfer(request, pk):
     else:
         messages.error(request, "Você deve estar logado para visualizar esta página.")
         return redirect('home')
-    
-def balance(request):
-    pass
