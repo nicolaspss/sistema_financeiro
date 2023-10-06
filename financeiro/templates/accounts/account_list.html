@@ -1,70 +1,68 @@
 {% load static %}
 {% if accounts %}
-    {% for account in accounts %}
-        <tr class="align-middle">
-            <td class="px-2">{{ account.id }}</td>
-            <td>{{ account.name }}</td>
-            <td>{{ account.account_type }}</td>
-            <td>{{ account.account_number }}</td>
-            <td>{{ account.agency }}</td>
-            <td>{{ account.titular_name }}</td>
-            <td>{{ account.titular_document }}</td>
-            <td class="h-100">
-
-                <!-- Essa célula da tabela contém os botões e os modais responsáveis por modificar as informações
+  {% for account in accounts %}
+    <tr class="align-middle">
+      <td class="px-2">{{ account.id }}</td>
+      <td>{{ account.name }}</td>
+      <td>{{ account.account_type }}</td>
+      <td>{{ account.account_number }}</td>
+      <td>{{ account.agency }}</td>
+      <td>{{ account.titular_name }}</td>
+      <td>{{ account.titular_document }}</td>
+      <td class="h-100">
+        <!--  Essa célula da tabela contém os botões e os modais responsáveis por modificar as informações
                      contidas em cada linha. Modificando a target e a id do modal para o id do objeto cria um link
                      entre eles, fazendo com que um mostre as informações do objeto em questão, substituindo o
-                     argumento "instance" do django-forms. -->
+                     argumento "instance" do django-forms.  -->
 
-                <div class="d-flex">
-                    <button type="button" class="btn btn-sm btn-secondary m-1" data-bs-toggle="modal" data-bs-target="#{{account.id}}" style="position: static;">
-                        <span class="loader"></span>
-                        <i class="fa-solid fa-arrows-rotate icon" style="display: none;"></i>
-                    </button>
-                    <form method="post" action ="{% url 'update_account' account.id %}">
-                        {% csrf_token %}
-                        <div class="modal fade" id="{{account.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Novo</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="row mb-3">
-                                            <div class="col-md-6">
-                                                <input type="text" class="form-control" name="name" placeholder="Nome da Instituição" value="{{ account.name }}">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <input type="text" class="form-control" name="account_type" placeholder="Tipo da Conta" value="{{ account.account_type }}">
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <div class="col-md-6">
-                                                <input type="text" class="form-control" name="account_number" placeholder="Número da Conta" value="{{ account.account_number }}">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <input type="number" class="form-control" name="agency" placeholder="Agência" value="{{ account.agency }}">
-                                            </div>
-                                        </div>
-                                        <input type="text" class="form-control mb-3" name="titular_name" placeholder="Nome do Titular" value="{{ account.titular_name }}">
-                                        <input type="text" class="form-control mb-3" name="titular_document" placeholder="Documento do Titular" value="{{ account.titular_document }}">
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk me-2"></i>Salvar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>   
-                    </form>
-                    <a href="{% url 'delete_account' account.id %}" class="btn btn-sm btn-danger m-1" style="height: 10%;position: static;">
-                        <span class="loader"></span>
-                        <i class="fa-solid fa-trash icon" style="display:none;"></i>
-                    </a>
+        <div class="d-flex">
+          <button type="button" class="btn btn-sm btn-secondary m-1" data-bs-toggle="modal" data-bs-target="#{{ account.id }}" style="position: static;">
+            <span class="loader"></span>
+            <i class="fa-solid fa-arrows-rotate icon" style="display: none;"></i>
+          </button>
+          <form method="post" action="{% url 'update_account' account.id %}">
+            {% csrf_token %}
+            <div class="modal fade" id="{{ account.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Novo</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row mb-3">
+                      <div class="col-md-6">
+                        <input type="text" class="form-control" name="name" placeholder="Nome da Instituição" value="{{ account.name }}" />
+                      </div>
+                      <div class="col-md-6">
+                        <input type="text" class="form-control" name="account_type" placeholder="Tipo da Conta" value="{{ account.account_type }}" />
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <div class="col-md-6">
+                        <input type="text" class="form-control" name="account_number" placeholder="Número da Conta" value="{{ account.account_number }}" />
+                      </div>
+                      <div class="col-md-6">
+                        <input type="number" class="form-control" name="agency" placeholder="Agência" value="{{ account.agency }}" />
+                      </div>
+                    </div>
+                    <input type="text" class="form-control mb-3" name="titular_name" placeholder="Nome do Titular" value="{{ account.titular_name }}" />
+                    <input type="text" class="form-control mb-3" name="titular_document" placeholder="Documento do Titular" value="{{ account.titular_document }}" />
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk me-2"></i>Salvar</button>
+                  </div>
                 </div>
-            </td>
-        </tr>
-    {% endfor %}
-
+              </div>
+            </div>
+          </form>
+          <a href="{% url 'delete_account' account.id %}" class="btn btn-sm btn-danger m-1" style="height: 10%;position: static;">
+            <span class="loader"></span>
+            <i class="fa-solid fa-trash icon" style="display:none;"></i>
+          </a>
+        </div>
+      </td>
+    </tr>
+  {% endfor %}
 {% endif %}

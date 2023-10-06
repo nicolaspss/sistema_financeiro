@@ -1,36 +1,75 @@
 {% extends 'base.html' %}
 
-{% block content %}
+{% block breadcrumb %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb my-4">
+      <li class="breadcrumb-item">
+        <a class="breadcrumb-link" href="{% url 'home' %}">Início</a>
+      </li>
+    </ol>
+  </nav>
+{% endblock %}
 
-<div class="pt-4">
-<table class="table">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">First</th>
-        <th scope="col">Last</th>
-        <th scope="col">Handle</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th scope="row">1</th>
-        <td>Mark</td>
-        <td>Otto</td>
-        <td>@mdo</td>
-      </tr>
-      <tr>
-        <th scope="row">2</th>
-        <td>Jacob</td>
-        <td>Thornton</td>
-        <td>@fat</td>
-      </tr>
-      <tr>
-        <th scope="row">3</th>
-        <td colspan="2">Larry the Bird</td>
-        <td>@twitter</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+<h2 class="mb-5">Início</h2>
+
+{% block content %}
+  <div class="row" id="element-to-print">
+    <div class="card col w-50 h-25 m-3 p-0 rounded-0">
+      <div class="card-header">Money Amount By Name:</div>
+      <div class="card-body">
+        <canvas id="myChart1"></canvas>
+      </div>
+    </div>
+    <div class="card col w-50 h-25 m-3 p-0 rounded-0">
+      <div class="card-header">Featured</div>
+      <div class="card-body">
+        <canvas id="myChart2"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    $(document).ready(function () {
+  
+      const ctx = document.getElementById('myChart1');
+  
+      const ctx2 = document.getElementById('myChart2');
+  
+      chart1 = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: [{% for item in qs %}'{{item.name}}',{% endfor %}],
+      datasets: [{
+        label: 'Money Amount:',
+        data: [{% for item in qs %}'{{item.amount}}', {% endfor %}],
+      borderWidth: 1
+        }]
+      },
+      options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }});
+  
+    chart2 = new Chart(ctx2, {
+      type: 'bar',
+      data: {
+        labels: [{% for item in qs %}'{{item.name}}',{% endfor %}],
+      datasets: [{
+        label: 'Money Amount:',
+        data: [{% for item in qs %}'{{item.amount}}', {% endfor %}],
+      borderWidth: 1
+        }]
+      },
+      options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }});
+    })
+  </script>
 {% endblock %}

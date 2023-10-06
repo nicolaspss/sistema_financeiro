@@ -65,7 +65,7 @@ class Transfer(models.Model):
     )
 
     name = models.CharField(max_length=32, blank=True, null=True)
-    value = models.FloatField(null=True, blank=True)
+    value = models.DecimalField(decimal_places=2, max_digits=9, null=True, blank=True)
     supplier = models.ForeignKey(Supplier, models.CASCADE)
     transfer_type = models.CharField(max_length=13, choices=TRANSFER_CHOICES)
     account = models.ForeignKey(Account, models.CASCADE)

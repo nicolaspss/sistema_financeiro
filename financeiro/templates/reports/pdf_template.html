@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Accountability Report</title>
+    <style>
+      @page {
+        margin: 1cm;
+        margin-top: 2.5cm;
+        /*margin-bottom: 2.5cm;*/
+        @frame header {
+          -pdf-frame-content: headerContent; /* headerContent is the #id of the element */
+          top: 1cm;
+          margin-left: 1cm;
+          margin-right: 1cm;
+          height: 100px;
+          -pdf-frame-border: 1; /* add border to frame */
+        }
+        @frame content {
+          -pdf-frame-content: contentContent; /* contentContent is the #id of the element */
+          top: 5cm;
+          margin-left: 1cm;
+          margin-right: 1cm;
+          height: 10cm;
+          /*-pdf-frame-border: 0;  add border to frame */
+        }
+      }
+      table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+        border: 1px solid #ddd;
+        margin-top: 20px;
+      }
+      th {
+        background-color: #F2F4F4;
+        height: 28px;
+        vertical-align: middle;
+        line-height: 0;
+        border: 0;
+      }
+      td {
+        text-align: center;
+        height: 25px;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <div id="headerContent" style="text-align: center;">
+        <h1 style="margin: 0;padding-top: 20px;border: 0;">Nome da Instituição</h1>
+        <h6 style="margin: 0;border: 0;">Avenida Alameda das Travessas, nº 111 - Bairro dos Barris. CEP: 40000-000.</h6>
+        <p style="margin: 0;border: 0;">Telefone: (99) 9 9999-9999</p>
+        <p style="margin: 0;border: 0;padding-bottom: 10px;">Email: teste@teste.com</p>
+      </div>
+      <div id="contentContent">
+        <h2 style="text-align: center; vertical-align: middle; margin-top: 200px;">Transferências</h2>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Cliente e Fornecedor</th>
+              <th scope="col">Tipo de Transferência</th>
+              <th scope="col">Conta Contábil</th>
+              <th scope="col">Conta Caixa</th>
+              <th scope="col">Início</th>
+              <th scope="col">Vencimento</th>
+              <th scope="col">Valor</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for transfer in transfers %}
+              <tr>
+                <td>{{ transfer.id }}</td>
+                <td>{{ transfer.supplier }}</td>
+                <td>{{ transfer.transfer_type }}</td>
+                <td>{{ transfer.account }}</td>
+                <td>{{ transfer.bank_account }}</td>
+                <td>{{ transfer.start_date|date:'d/m/Y' }}</td>
+                <td>{{ transfer.end_date|date:'d/m/Y' }}</td>
+                {% if transfer.transfer_type == 'Recebimento' %}
+                  <td style="color: #3498DB;">R$ {{ transfer.value }}</td>
+                {% elif transfer.transfer_type == 'Pagamento' %}
+                  <td style="color: #E74C3C;">R$ {{ transfer.value }}</td>
+                {% endif %}
+              </tr>
+            {% endfor %}
+          </tbody>
+          <tfoot>
+            <th colspan="6"></th>
+            <th>
+              <strong>Total:</strong>
+            </th>
+            <th>
+              <strong>R$ {{ transfer_sum.value__sum|floatformat:2 }}</strong>
+            </th>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

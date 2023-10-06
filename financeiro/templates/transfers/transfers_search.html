@@ -11,8 +11,6 @@
 </nav>
 {% endblock %}
 
-
-
 <h2 class="mb-5"> Transferências </h2>
 
 <div class="card">
@@ -35,7 +33,7 @@
 
           <!-- Formulário da nova categoria -->
 
-          <form method="post" action="{% url 'new_receipt' %}">
+          <form method="post" class="form-floating" action="{% url 'new_receipt' %}">
             {% csrf_token %}
             <div class="modal fade" id="formModalReceipt" tabindex="-1" aria-labelledby="exampleModalLabel"
               aria-hidden="true">
@@ -46,32 +44,44 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <select class="form-select mb-3" name="bank_account" aria-label="Selecione a Conta Caixa:"
+                    <div class="form-floating">
+                    <select class="form-select mb-3" id="receipt_bank_account" name="bank_account" aria-label="Selecione a Conta Caixa:"
                       placeholder="Selecione a Conta Caixa" required>
-                      <option selected>Selecione a Conta Caixa:</option>
                       {% for account in bank_accounts %}
                       <option value="{{account.id}}">{{account.name}}</option>
                       {% endfor %}
                     </select>
-                    <select class="form-select mb-3" name="supplier" aria-label="Selecione o Cliente ou Fornecedor:"
+                    <label for="receipt_bank_account">Selecione a Conta Caixa:</label>
+                    </div>
+                    <div class="form-floating">
+                    <select class="form-select mb-3" id="receipt_supplier" name="supplier" aria-label="Selecione o Cliente ou Fornecedor:"
                       placeholder="Selecione o Cliente ou Fornecedor:" required>
-                      <option selected>Selecione o Cliente ou Fornecedor: </option>
                       {% for supplier in suppliers %}
                       <option value="{{supplier.id}}">{{supplier.name}}</option>
                       {% endfor %}
                     </select>
-                    <select class="form-select mb-3" name="account" aria-label="Selecione a Conta Contábil"
-                      placeholder="Selecione o Cliente ou Fornecedor:" required>
-                      <option selected>Selecione a Conta Contábil:</option>
+                    <label for="receipt_supplier">Selecione o Cliente e Fornecedor: </label>
+                    </div>
+                    <div class="form-floating">
+                    <select class="form-select mb-3" id="receipt_account" name="account" aria-label="Selecione a Conta Contábil"
+                      placeholder="Selecione o Cliente ou Fornecedor:" required>  
                       {% for account in accounts %}
                       <option value="{{account.id}}">{{account.name}}</option>
                       {% endfor %}
                     </select>
-                    <div class="col-md-2">
-                      <input type="date" name="start_date">
-                      <input type="date" name="end_date">
+                    <label for="receipt_account">Selecione a Conta Contábil:</label>
                     </div>
-                    <input type="number" class="form-control mb-3" name="value" placeholder="Quantia:">
+                    <div class="row mb-3">
+                      <div class="col-md-6">
+                        <label class="ms-1 mb-1" for="receipt_start_date"> Data de Início </label>
+                        <input type="date" id="receipt_start_date" class="form-control col-md-4" name="start_date" required>
+                      </div>
+                      <div class="col-md-6">
+                        <label class="ms-1 mb-1" for="payment_start_date"> Data de Vencimento </label>
+                        <input type="date" id="payment_start_date" class="form-control col-md-4" name="end_date" required>
+                      </div>
+                    </div>
+                    <input type="number" class="form-control mb-3" name="value" placeholder="Valor:" required>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -91,34 +101,52 @@
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Novo Pagamento</h1>
+                    <h1 class="modal-title fs-5" id="formModalReceipt">Novo Pagamento</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <select class="form-select mb-3" name="bank_account" aria-label="Selecione a Conta Caixa:"
+                    <div class="form-floating">
+                    <select class="form-select mb-3" id="receipt_bank_account" name="bank_account" aria-label="Selecione a Conta Caixa:"
                       placeholder="Selecione a Conta Caixa" required>
                       {% for account in bank_accounts %}
                       <option value="{{account.id}}">{{account.name}}</option>
                       {% endfor %}
                     </select>
-                    <select class="form-select mb-3" name="supplier" aria-label="Selecione o Cliente ou Fornecedor:"
+                    <label for="receipt_bank_account">Selecione a Conta Caixa:</label>
+                    </div>
+                    <div class="form-floating">
+                    <select class="form-select mb-3" id="receipt_supplier" name="supplier" aria-label="Selecione o Cliente ou Fornecedor:"
                       placeholder="Selecione o Cliente ou Fornecedor:" required>
                       {% for supplier in suppliers %}
                       <option value="{{supplier.id}}">{{supplier.name}}</option>
                       {% endfor %}
                     </select>
-                    <select class="form-select mb-3" name="account" aria-label="Selecione o Cliente ou Fornecedor:"
-                      placeholder="Selecione o Cliente ou Fornecedor:" required>
+                    <label for="receipt_supplier">Selecione o Cliente e Fornecedor: </label>
+                    </div>
+                    <div class="form-floating">
+                    <select class="form-select mb-3" id="receipt_account" name="account" aria-label="Selecione a Conta Contábil"
+                      placeholder="Selecione o Cliente ou Fornecedor:" required>  
                       {% for account in accounts %}
                       <option value="{{account.id}}">{{account.name}}</option>
                       {% endfor %}
                     </select>
-                    <input type="number" class="form-control mb-3" name="value" placeholder="Quantia:">
+                    <label for="receipt_account">Selecione a Conta Contábil:</label>
+                    </div>
+                    <div class="row mb-3">
+                      <div class="col-md-6">
+                        <label class="ms-1 mb-1" for="receipt_start_date"> Data de Início </label>
+                        <input type="date" id="receipt_start_date" class="form-control col-md-4" name="start_date" required>
+                      </div>
+                      <div class="col-md-6">
+                        <label class="ms-1 mb-1" for="payment_start_date"> Data de Vencimento </label>
+                        <input type="date" id="payment_start_date" class="form-control col-md-4" name="end_date" required>
+                      </div>
+                    </div>
+                    <input type="number" class="form-control mb-3" name="value" placeholder="Valor:" required>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary"><i
-                        class="fa-solid fa-floppy-disk me-2"></i>Salvar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
                   </div>
                 </div>
               </div>
@@ -126,28 +154,32 @@
           </form>
         </div>
       </div>
-      <div class="col-md-auto p-0">
-        <form class="d-flex float-start" method="POST" action="{% url 'search_bar' %}">
-          {% csrf_token %}
+      <div class="row p-0">
+        <form action="{% url 'filtered_objects' %}" class="d-flex col" method="get">
           <input type="date" name="start" class="form-control form-control-sm mx-2">
           <input type="date" name="end" class="form-control form-control-sm mx-2">
+          <button class="btn btn-sm btn-primary" type="submit"><i class="fa-regular fa-calendar-days"></i></button>
+        </form>
+        <form class="d-flex float-start col" method="POST" action="{% url 'search_bar' %}">
+          {% csrf_token %}
           <input type="search" class="form-control form-control-sm mx-2" placeholder="Filtrar..." name="searched">
+          <button class="btn btn-sm btn-primary" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
         </form>
       </div>
     </div>
   </div>
-  <div class="card-body p-0">
-    <table class="table table-hover table-borderless table-striped table-sm mb-0 sortable">
-      <thead class="bg-light clickable">
+  <div class="card-body p-0 overflow-auto">
+    <table class="table table-hover table-borderless table-sm mb-0 sortable">
+      <thead class="clickable">
         <tr>
           <th scope="col px-1">#</th>
           <th scope="col">Cliente e Fornecedor</th>
           <th scope="col">Tipo de Transferência</th>
           <th scope="col">Conta Contábil</th>
           <th scope="col">Conta Caixa</th>
-          <th scope="col">Valor</th>
           <th scope="col">Início</th>
           <th scope="col">Vencimento</th>
+          <th scope="col">Valor</th>
           <th scope="col">Ação</th>
         </tr>
       </thead>
@@ -157,86 +189,28 @@
           a possibilidade de renderizar os resultados da pesquisa dentro do bloco
           "table" quando a url "filtrar" for chamada -->
 
-        {% for transfer in transfers %}
-        <tr class="align-middle">
-          <td class="px-2">{{ transfer.id }}</td>
-          <td>{{ transfer.supplier }}</td>
-          <td>{{ transfer.transfer_type }}</td>
-          <td>{{ transfer.account }}</td>
-          <td>{{ transfer.bank_account }}</td>
-          <td>{{ transfer.start_date }}</td>
-          <td>{{ transfer.end_date }}</td>
-          <td>R$ {{ transfer.value }}</td>
-          <td class="h-100">
+        {% include 'transfers/transfers_list.html' %}
+        {% block table %}
 
-            <!-- Essa célula da tabela contém os botões e os modais responsáveis por modificar as informações
-                contidas em cada linha. Modificando a target e a id do modal para o id do objeto cria um link
-                entre eles, fazendo com que um mostre as informações do objeto em questão, substituindo o
-                argumento "instance" do django-forms. -->
+        {% endblock %}
 
-            <div class="d-flex">
-              <button type="button" class="btn btn-sm btn-secondary m-1" data-bs-toggle="modal"
-                data-bs-target="#{{account.id}}" style="position: static;">
-                <span class="loader"></span>
-                <i class="fa-solid fa-arrows-rotate icon" style="display: none;"></i>
-              </button>
-              <form method="post" action="">
-                {% csrf_token %}
-                <div class="modal fade" id="{{account.id}}" tabindex="-1" aria-labelledby="exampleModalLabel"
-                  aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Novo</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                        <div class="row mb-3">
-                          <div class="col-md-6">
-                            <input type="text" class="form-control" name="name" placeholder="Nome da Instituição"
-                              value="{{ account.name }}">
-                          </div>
-                          <div class="col-md-6">
-                            <input type="text" class="form-control" name="account_type" placeholder="Tipo da Conta"
-                              value="{{ account.account_type }}">
-                          </div>
-                        </div>
-                        <div class="row mb-3">
-                          <div class="col-md-6">
-                            <input type="text" class="form-control" name="account_number" placeholder="Número da Conta"
-                              value="{{ account.account_number }}">
-                          </div>
-                          <div class="col-md-6">
-                            <input type="number" class="form-control" name="agency" placeholder="Agência"
-                              value="{{ account.agency }}">
-                          </div>
-                        </div>
-                        <input type="text" class="form-control mb-3" name="titular_name" placeholder="Nome do Titular"
-                          value="{{ account.titular_name }}">
-                        <input type="text" class="form-control mb-3" name="titular_document"
-                          placeholder="Documento do Titular" value="{{ account.titular_document }}">
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary"><i
-                            class="fa-solid fa-floppy-disk me-2"></i>Salvar</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </form>
-              <a href="{% url 'delete_transfer' transfer.id %}" class="btn btn-sm btn-danger m-1"
-                style="height: 10%;position: static;">
-                <span class="loader"></span>
-                <i class="fa-solid fa-trash icon" style="display:none;"></i>
-              </a>
-            </div>
+      </tbody>
+      <tfoot class="border-top">
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td><strong>Total: </strong></td>
+          <td> 
+            <strong>R$ {{transfer_sum.value__sum}}</strong>
           </td>
         </tr>
-        {% endfor %}
-      </tbody>
+      </tfoot>
     </table>
-
+    
   </div>
 </div>
 

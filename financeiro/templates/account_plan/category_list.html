@@ -33,7 +33,7 @@
                           <span class="loader"></span>
                           <i class="fa-solid fa-arrows-rotate icon" style="display: none;"></i>
                       </button>
-                      <form method="post" action ="{% comment %}{% url 'update_account_plan' account.account_id %}{% endcomment %}">
+                      <form method="post" action ="{% url 'update_account_plan' account.id %}">
                         {% csrf_token %}
                         <div class="modal fade" id="{{account.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                           <div class="modal-dialog">
@@ -45,12 +45,14 @@
                               <div class="modal-body">
                                 <input type="text" class="form-control mb-3" name="account_name" value="{{ account.name }}" placeholder="{{ account.name }}" required>
                                 <input type="number" class="form-control mb-3" name="amount" value=""  placeholder="Quantia:">
-                                <select class="form-select" aria-label="Selecione a Categoria:" required>
-                                  <option selected>Selecione a Categoria</option>
+                                <div class="form-floating">
+                                <select class="form-select" id="account_category" name="account_category" aria-label="Selecione a Categoria:" required>
                                   {% for category in categories %}
-                                      <option value="{{category.name}}" selected>{{category.name}}</option>
+                                      <option value="{{category.id}}" selected>{{category.name}}</option>
                                   {% endfor %}
                                 </select>
+                                <label for="account_category">Selecione a Categoria</label>
+                                </div>
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -61,7 +63,7 @@
                           </div>
                         </div>
                       </form>
-                      <a href="{% comment %}{% url 'delete_account' account.id %}{% endcomment %}" class="btn btn-sm btn-danger m-1" style="height: 10%;position: static;">
+                      <a href="{% url 'delete_account_plan' account.id %}" class="btn btn-sm btn-danger m-1" style="height: 10%;position: static;">
                           <span class="loader"></span>
                           <i class="fa-solid fa-trash icon" style="display:none;"></i>
                       </a>
