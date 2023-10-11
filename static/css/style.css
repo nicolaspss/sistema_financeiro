@@ -77,3 +77,9 @@ thead.clickable:hover {
         margin: auto;
     }
   }
+
+@media (width < 550px) {
+    .button-label {
+        display: none;
+    }
+}
