@@ -1,75 +1,149 @@
 {% extends 'base.html' %}
 
+{% block content %}
 {% block breadcrumb %}
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb my-4">
-      <li class="breadcrumb-item">
-        <a class="breadcrumb-link" href="{% url 'home' %}">Início</a>
-      </li>
-    </ol>
-  </nav>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb my-4">
+    <li class="breadcrumb-item">
+      <a class="breadcrumb-link" href="{% url 'home' %}">Início</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">Visão Geral</li>
+  </ol>
+</nav>
 {% endblock %}
 
 <h2 class="mb-5">Início</h2>
 
-{% block content %}
-  <div class="row" id="element-to-print">
-    <div class="card col w-50 h-25 m-3 p-0 rounded-0">
-      <div class="card-header">Money Amount By Name:</div>
-      <div class="card-body">
-        <canvas id="myChart1"></canvas>
-      </div>
-    </div>
-    <div class="card col w-50 h-25 m-3 p-0 rounded-0">
-      <div class="card-header">Featured</div>
-      <div class="card-body">
-        <canvas id="myChart2"></canvas>
-      </div>
+<div class="h-100 w-auto d-flex row margin-right" style="min-width: 50%;">
+  <div class="w-100 border-left m-2 col" style="border-left: 0.25rem solid #D4EFDF; background-color: #E9F7EF;">
+    <div class="p-3">
+      {% if receipts_month.value__sum == None %}
+      <h6 class="opacity-75">Receitas: R$ 0,00</h6>
+      <p>{{ current_month }}/{{ current_year }}</p>
+      {% else %}
+      <h6 class="opacity-75">Receitas: R$ {{ receipts_month.value__sum|floatformat:2 }}</h6>
+      <p>{{ current_month }}/{{ current_year }}</p>
+      {% endif %}
     </div>
   </div>
 
-  <script>
-    $(document).ready(function () {
-  
-      const ctx = document.getElementById('myChart1');
-  
-      const ctx2 = document.getElementById('myChart2');
-  
-      chart1 = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: [{% for item in qs %}'{{item.name}}',{% endfor %}],
-      datasets: [{
-        label: 'Money Amount:',
-        data: [{% for item in qs %}'{{item.amount}}', {% endfor %}],
-      borderWidth: 1
+  <div class="w-100 border-left m-2 col" style="border-left: 0.25rem solid #FADBD8; background-color: #FDEDEC;">
+    <div class="p-3">
+      {% if payments_month.value__sum == None %}
+      <h6 class="opacity-75">Despesas: R$ 0,00</h6>
+      <p>{{ current_month }}/{{ current_year }}</p>
+      {% else %}
+      <h6 class="opacity-75">Despesas: R$ {{ payments_month.value__sum|floatformat:2 }}</h6>
+      <p>{{ current_month }}/{{ current_year }}</p>
+      {% endif %}
+    </div>
+  </div>
+  <div class="w-100 border-left m-2 col" style="border-left: 0.25rem solid #F9E79F; background-color: #FEF9E7;">
+    <div class="p-3 pb-2">
+      {% if total_month.value__sum == None %}
+      <h6 class="opacity-75">Saldo Atual: R$ 0,00</h6>
+      <p>{{ current_month }}/{{ current_year }}</p>
+      {% else %}
+      <h6 class="opacity-75">Saldo Atual: R$ {{ total_month.value__sum|floatformat:2 }}</h6>
+      <p>{{ current_month }}/{{ current_year }}</p>
+      {% endif %}
+    </div>
+  </div>
+  <div class="w-100 border-left m-2 col" style="border-left: 0.25rem solid #AED6F1; background-color: #EBF5FB;">
+    <div class="p-3 pb-2">
+      {% if last_total.value__sum == None %}
+      <h6 class="opacity-75">Saldo Ant.: R$ 0,00</h6>
+      <p>{{ last_month }}/{{ current_year }}</p>
+      {% else %}
+      <h6 class="opacity-75">Saldo Ant.: R$ {{ last_total.value__sum|floatformat:2 }}</h6>
+      <p>{{ last_month }}/{{ current_year }}</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<div class="m-0 mt-3 row">
+  <div class="col mx-2 ps-0 pt-2 p-4">
+    <canvas id="myChart"></canvas>
+  </div>
+  <div class="card rounded-0 p-0 h-25 mx-auto border-0 col">
+    <div class="card-header w-100">
+      Últimos Lançamentos:
+    </div>
+    <div class="card-body p-0 overflow-auto">
+      <table class="table table-hover table-borderless tabe-responsive table-sm sortable mb-0 w-100">
+        <thead class="clickable sticky-top">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Fornecedor</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Início</th>
+            <th scope="col">Vencimento</th>
+            <th scope="col">Valor</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for transfer in all_transfers %}
+          {% if transfer.transfer_type == "Recebimento" %}
+          <tr class="align-middle table-success">
+            {% elif transfer.transfer_type == "Pagamento" %}
+          <tr class="align-middle table-danger">
+            {% endif %}
+            <td class="px-3">{{ transfer.id }}</td>
+            <td>{{ transfer.supplier }}</td>
+            <td>{{ transfer.transfer_type }}</td>
+            <td>{{ transfer.start_date|date:"d/m/Y" }}</td>
+            <td>{{ transfer.end_date|date:"d/m/Y" }}</td>
+            <td>R$ {{ transfer.value }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  // Data passed from the Django view
+
+  var ctx = document.getElementById('myChart').getContext('2d');
+  var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: {{ labels| safe }},
+  datasets: [{
+    label: 'Receipts',
+    data: {{ receipts_data| safe }},
+    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+    borderColor: 'rgba(75, 192, 192, 1)',
+    borderWidth: 1,
+    tension: 0.3
+          },
+  {
+    label: 'Payments',
+    data: {{ payments_data| safe }},
+    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+    borderColor: 'rgba(255, 99, 132, 1)',
+    borderWidth: 1,
+    tension: 0.3
+          },
+  {
+    label: 'Total',
+    data: {{ total_data | safe }},
+    backgroundColor: '#AED6F1',
+    borderColor: '#AED6F1',
+    borderWidth: 1,
+    tension: 0.3
         }]
       },
-      options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true
       }
-    }});
-  
-    chart2 = new Chart(ctx2, {
-      type: 'bar',
-      data: {
-        labels: [{% for item in qs %}'{{item.name}}',{% endfor %}],
-      datasets: [{
-        label: 'Money Amount:',
-        data: [{% for item in qs %}'{{item.amount}}', {% endfor %}],
-      borderWidth: 1
-        }]
-      },
-      options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }});
-    })
-  </script>
+    }
+  }
+  });
+</script>
 {% endblock %}

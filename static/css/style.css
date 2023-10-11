@@ -1,6 +1,6 @@
 html, body {
     height: 100%;
-    font-size: 12px;
+    font-size: 15px;
 }
 
 a:link {
@@ -68,3 +68,12 @@ thead.clickable:hover {
 .card-header {
     border-radius: 0%;
 }
+
+@media (width > 800px) {
+    .max-width {
+        width: 50%;
+    }
+    .margin-auto {
+        margin: auto;
+    }
+  }
